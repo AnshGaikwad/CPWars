@@ -1,13 +1,13 @@
 import { useState, useEffect } from "react";
 import axios from "axios";
-import "./PrivateScreen.css";
+import "./HomeScreen.css";
 
-const PrivateScreen = () => {
+const HomeScreen = () => {
   const [error, setError] = useState("");
-  const [privateData, setPrivateData] = useState("");
+  const [homeData, setHomeData] = useState("");
 
   useEffect(() => {
-    const fetchPrivateDate = async () => {
+    const fetchHomeDate = async () => {
       const config = {
         headers: {
           "Content-Type": "application/json",
@@ -16,21 +16,21 @@ const PrivateScreen = () => {
       };
 
       try {
-        const { data } = await axios.get("/api/private", config);
-        setPrivateData(data.data);
+        const { data } = await axios.get("/api/home", config);
+        setHomeData(data.data);
       } catch (error) {
         localStorage.removeItem("authToken");
         setError("You are not authorized please login");
       }
     };
 
-    fetchPrivateDate();
+    fetchHomeDate();
   }, []);
   return error ? (
     <span className="error-message">{error}</span>
   ) : (
-    <div>{privateData}</div>
+    <div>{homeData}</div>
   );
 };
 
-export default PrivateScreen;
+export default HomeScreen;
