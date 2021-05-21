@@ -6,6 +6,7 @@ import * as AiIcons from 'react-icons/ai';
 import { SidebarData } from './SidebarData';
 import SubMenu from './SubMenu';
 import { IconContext } from 'react-icons/lib';
+import { Button } from './Button';
 
 const Nav = styled.div`
   background: #15171c;
@@ -37,9 +38,10 @@ const SidebarNav = styled.nav`
   z-index: 10;
 `;
 
-const heading = {
+const heading1 = {
   color: '#fff',
-  marginLeft: '.5rem',
+  marginLeft: '2rem',
+  marginRight: '70rem',
   fontSize: '2rem',
   height: '80px',
   display: 'flex',
@@ -47,9 +49,20 @@ const heading = {
   alignItems: 'center',
 };
 
+const heading2 = {
+    color: '#fff',
+    marginLeft: '.5rem',
+    fontSize: '2rem',
+    height: '80px',
+    display: 'flex',
+    justifyContent: 'flex-start',
+    alignItems: 'center',
+  };
+
 const SidebarWrap = styled.div`
   width: 100%;
 `;
+
 
 const Sidebar = () => {
   const [sidebar, setSidebar] = useState(false);
@@ -63,13 +76,15 @@ const Sidebar = () => {
           <NavIcon to='#'>
             <FaIcons.FaBars onClick={showSidebar} />
           </NavIcon>
-          <h1 style={heading}>CP-Wars</h1>
+          <h1 style={heading1}>CP-Wars</h1>
+          <Button/>
         </Nav>
+        
         <SidebarNav sidebar={sidebar}>
           <SidebarWrap>
             <NavIcon to='#'>
               <AiIcons.AiOutlineClose onClick={showSidebar} />
-              <h1 style={heading}>CP-Wars</h1>
+              <h1 style={heading2}>CP-Wars</h1>
             </NavIcon>
             {SidebarData.map((item, index) => {
               return <SubMenu item={item} key={index} />;
