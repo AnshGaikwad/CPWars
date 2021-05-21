@@ -1,6 +1,6 @@
 const Queue = require("bull");
 
-const Job = require("./models/Job");
+const Job = require("../models/Job");
 const { executeCpp } = require("./executeCpp");
 const { executePy } = require("./executePy");
 
