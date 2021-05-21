@@ -3,11 +3,9 @@ const express = require("express");
 const cors = require("cors");
 const app = express();
 const connectDB = require("./config/db");
-const connectCDB = require("./config/compiler_db");
 const errorHandler = require("./middleware/error");
 
 connectDB();
-connectCDB();
 
 const { generateFile } = require("./compiler/generateFile");
 
