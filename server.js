@@ -1,10 +1,19 @@
 require("dotenv").config({ path: "./config.env" });
 const express = require("express");
+const cors = require("cors");
 const app = express();
 const connectDB = require("./config/db");
+const connectCDB = require("./config/compiler_db");
 const errorHandler = require("./middleware/error");
 
 connectDB();
+connectCDB();
+
+const { generateFile } = require("./generateFile");
+
+const { addJobToQueue } = require("./jobQueue");
+const Job = require("./models/Job");
+
 
 app.use(express.json());
 

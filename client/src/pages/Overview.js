@@ -1,4 +1,5 @@
 import React from 'react';
+import Compiler from '../components/compiler/Compiler.js';
 
 const Overview = () => {
   return (
@@ -18,9 +19,10 @@ export const Battle = () => {
   
   export const Practice = () => {
     return (
-      <div className='main'>
-        <h1>Practice</h1>
-      </div>
+      // <div className='main'>
+      //   <h1>Practice</h1>
+      // </div>
+      <Compiler/>
     );
   };
   
