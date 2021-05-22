@@ -41,7 +41,7 @@ body {
   border-bottom: 3px solid coral;
 }
 
-.btn {
+.butn {
   padding: 10px 20px;
   cursor: pointer;
   width: 100%;
@@ -49,11 +49,11 @@ body {
   border: none;
 }
 
-.btn:hover {
+.butn:hover {
   opacity: 0.8;
 }
 
-.btn-primary {
+.butn-primary {
   background-color: coral;
   color: #fff;
 }
