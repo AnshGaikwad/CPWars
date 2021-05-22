@@ -5,139 +5,71 @@ import React, { useState, useEffect } from "react";
 import moment from "moment";
 
 function Compiler() {
-  const [code, setCode] = useState("");
-  const [output, setOutput] = useState("");
-  const [language, setLanguage] = useState("cpp");
-  const [jobId, setJobId] = useState(null);
-  const [status, setStatus] = useState(null);
-  const [jobDetails, setJobDetails] = useState(null);
 
-  useEffect(() => {
-    setCode(stubs[language]);
-  }, [language]);
-
-  useEffect(() => {
-    const defaultLang = localStorage.getItem("default-language") || "cpp";
-    setLanguage(defaultLang);
-  }, []);
-
-  let pollInterval;
-
-  const handleSubmit = async () => {
-    const payload = {
-      language,
-      code,
-    };
-    try {
-      setOutput("");
-      setStatus(null);
-      setJobId(null);
-      setJobDetails(null);
-      const { data } = await axios.post("/run", payload);
-      if (data.jobId) {
-        setJobId(data.jobId);
-        setStatus("Submitted.");
-
-        // poll here
-        pollInterval = setInterval(async () => {
-          const { data: statusRes } = await axios.get(
-            `/status`,
-            {
-              params: {
-                id: data.jobId,
-              },
-            }
-          );
-          const { success, job, error } = statusRes;
-          console.log(statusRes);
-          if (success) {
-            const { status: jobStatus, output: jobOutput } = job;
-            setStatus(jobStatus);
-            setJobDetails(job);
-            if (jobStatus === "pending") return;
-            setOutput(jobOutput);
-            clearInterval(pollInterval);
-          } else {
-            console.error(error);
-            setOutput(error);
-            setStatus("Bad request");
-            clearInterval(pollInterval);
-          }
-        }, 1000);
-      } else {
-        setOutput("Retry again.");
-      }
-    } catch ({ response }) {
-      if (response) {
-        const errMsg = response.data.err.stderr;
-        setOutput(errMsg);
-      } else {
-        setOutput("Please retry submitting.");
-      }
-    }
-  };
-
-  const setDefaultLanguage = () => {
-    localStorage.setItem("default-language", language);
-    console.log(`${language} set as default!`);
-  };
-
-  const renderTimeDetails = () => {
-    if (!jobDetails) {
-      return "";
-    }
-    let { submittedAt, startedAt, completedAt } = jobDetails;
-    let result = "";
-    submittedAt = moment(submittedAt).toString();
-    result += `Job Submitted At: ${submittedAt}  `;
-    if (!startedAt || !completedAt) return result;
-    const start = moment(startedAt);
-    const end = moment(completedAt);
-    const diff = end.diff(start, "seconds", true);
-    result += `Execution Time: ${diff}s`;
-    return result;
-  };
+  
 
   return (
-    <div className="App">
-      <h1>Online Code Compiler</h1>
-      <div>
-        <label>Language:</label>
-        <select
-          value={language}
-          onChange={(e) => {
-            const shouldSwitch = window.confirm(
-              "Are you sure you want to change language? WARNING: Your current code will be lost."
-            );
-            if (shouldSwitch) {
-              setLanguage(e.target.value);
-            }
-          }}
+    <>
+    <div className="row container-fluid">
+      <div className="col-6 ml-4 ">
+        <label for="solution ">
+          <span className="badge badge-info heading mt-2 ">
+            <i className="fas fa-code fa-fw fa-lg"></i> Code Here
+          </span>
+        </label>
+        <textarea
+          required
+          name="solution"
+          id="source"
+          // onChange={}
+          className=" source"
+          // value={this.state.input}
+        ></textarea>
+
+        <button
+          type="submit"
+          className="btn btn-danger ml-2 mr-2 "
+          // onClick={this.submit}
         >
-          <option value="cpp">C++</option>
-          <option value="py">Python</option>
+          <i class="fas fa-cog fa-fw"></i> Run
+        </button>
+
+        <label for="tags" className="mr-1">
+          <b className="heading">Language:</b>
+        </label>
+        <select
+          // value={this.state.language_id}
+          // onChange={this.language}
+          id="tags"
+          className="form-control form-inline mb-2 language"
+        >
+          <option value="2">C++</option>
+          <option value="1">C</option>
+          <option value="4">Java</option>
+          <option value="10">Python</option>
         </select>
       </div>
-      <br />
-      <div>
-        <button onClick={setDefaultLanguage}>Set Default</button>
+      <div className="col-5">
+        <div>
+          <span className="badge badge-info heading my-2 ">
+            <i className="fas fa-exclamation fa-fw fa-md"></i> Output
+          </span>
+          <br/>
+          <textarea id="output"></textarea>
+        </div>
       </div>
-      <br />
-      <textarea
-        rows="20"
-        cols="75"
-        value={code}
-        onChange={(e) => {
-          setCode(e.target.value);
-        }}
-      ></textarea>
-      <br />
-      <button onClick={handleSubmit}>Submit</button>
-      <p>{status}</p>
-      <p>{jobId ? `Job ID: ${jobId}` : ""}</p>
-      <p>{renderTimeDetails()}</p>
-      <p>{output}</p>
     </div>
+
+    <div className="mt-2 ml-5">
+      <span className="badge badge-primary heading my-2 ">
+        <i className="fas fa-user fa-fw fa-md"></i> User Input
+      </span>
+      <br />
+      <textarea id="input" 
+      // onChange={this.userInput}
+      ></textarea>
+    </div>
+  </>
   );
 }
 
