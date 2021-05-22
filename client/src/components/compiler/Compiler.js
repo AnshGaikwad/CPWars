@@ -3,6 +3,8 @@ import React, { Component } from "react";
 import AceEditor from "react-ace";
 
 import "ace-builds/src-noconflict/mode-python";
+import "ace-builds/src-noconflict/mode-c_cpp";
+import "ace-builds/src-noconflict/mode-java";
 import "ace-builds/src-noconflict/theme-github";
 
 
@@ -13,7 +15,8 @@ export default class Compiler extends Component {
     this.state = {
       input: localStorage.getItem('input')||``,
       output: ``,
-      language_id:localStorage.getItem('language_Id')|| 2,
+      language_id:localStorage.getItem('language_Id')|| 54,
+      language_compiler: `python`,
       user_input: ``,
     };
   }
@@ -37,12 +40,35 @@ export default class Compiler extends Component {
     event.preventDefault();
     this.setState({ user_input: event.target.value });
   };
+
   language = (event) => {
    
     event.preventDefault();
    
     this.setState({ language_id: event.target.value });
-    localStorage.setItem('language_Id',event.target.value)
+    localStorage.setItem('language_Id',event.target.value);
+    console.log(event.target.value);
+    console.log(this.state.language_id);
+    console.log(this.state.language_compiler);
+
+    if(event.target.value === 50)
+    {
+      this.setState({language_compiler: "c_cpp"})
+    }
+    else if(event.target.value === 54)
+    {
+      this.setState({language_compiler: "c_cpp"})
+    }
+    else if(event.target.value === 62)
+    {
+      this.setState({language_compiler: "java"})
+    }
+    else if(event.target.value === 70)
+    {
+      this.setState({language_compiler: "python"})
+    }
+
+    console.log(this.state.language_compiler);
    
   };
 
@@ -131,7 +157,7 @@ export default class Compiler extends Component {
               </span>
             </label>
             <AceEditor
-                mode="python"
+                mode={this.state.language_compiler}
                 theme="github"
                 name="UNIQUE_ID_OF_DIV"
                 // onLoad={this.onLoad}
