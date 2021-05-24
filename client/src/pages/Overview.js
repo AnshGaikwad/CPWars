@@ -1,10 +1,34 @@
-import React from 'react';
+import React, {useState, useEffect, setError} from 'react';
 import Compiler from '../components/compiler/Compiler.js';
+import axios from "axios";
 
 const Overview = () => {
+
+  const [user, setUser] = useState({ hits: [] });
+ 
+  useEffect(async () => {
+
+    const config = {
+      header: {
+        "Content-Type": "application/json",
+      },
+    };
+
+    const token = localStorage.getItem("authToken");
+
+    const { data } = await axios.post(
+        "/api/auth/currentUser",
+        { token },
+        config
+      );
+ 
+    setUser(data.user);
+  }, []);
+
+
   return (
     <div className='main'>
-      <h1>Overview</h1>
+      <h1>Welcome {user.username}</h1>
     </div>
   );
 };

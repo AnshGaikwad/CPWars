@@ -2,6 +2,7 @@ const crypto = require("crypto");
 const ErrorResponse = require("../utils/errorResponse");
 const User = require("../models/User");
 const sendEmail = require("../utils/sendEmail");
+const jwt = require("jsonwebtoken");
 
 // @desc    Login user
 exports.login = async (req, res, next) => {
@@ -132,6 +133,29 @@ exports.resetPassword = async (req, res, next) => {
   } catch (err) {
     next(err);
   }
+};
+
+// @desc    Current User
+exports.currentUser = async (req, res, next) => {
+  const { token } = req.body;
+
+  const decoded = jwt.verify(token, process.env.JWT_SECRET);
+
+  const user = await User.findById(decoded.id);
+
+  console.log(user);
+
+  try{
+  res.status(200).json({
+    user,
+  });
+
+  console.log("done");
+}
+catch(err)
+{
+  next(err);
+}
 };
 
 const sendToken = (user, statusCode, res) => {

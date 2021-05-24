@@ -6,7 +6,7 @@ import * as AiIcons from 'react-icons/ai';
 import { SidebarData } from './SidebarData';
 import SubMenu from './SubMenu';
 import { IconContext } from 'react-icons/lib';
-import { Button } from './Button';
+import {Button} from '@material-ui/core'
 
 const Nav = styled.div`
   background: #15171c;
@@ -63,6 +63,10 @@ const SidebarWrap = styled.div`
   width: 100%;
 `;
 
+const logOut = () => {
+  localStorage.removeItem("authToken");
+}
+
 
 const Sidebar = () => {
   const [sidebar, setSidebar] = useState(false);
@@ -77,7 +81,11 @@ const Sidebar = () => {
             <FaIcons.FaBars onClick={showSidebar} />
           </NavIcon>
           <h1 style={heading1}>CP-Wars</h1>
-          <Button/>
+          <Button variant="contained" onClick={logOut}>
+            <a href="/" >
+            Log Out
+            </a>
+          </Button>
         </Nav>
         
         <SidebarNav sidebar={sidebar}>

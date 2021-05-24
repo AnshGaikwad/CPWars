@@ -26,6 +26,7 @@ const HomeScreen = () => {
       try {
         const { data } = await axios.get("/api/home", config);
         setHomeData(data.data);
+        console.log("User"+data.data);
       } catch (error) {
         localStorage.removeItem("authToken");
         setError("You are not authorized please login");
