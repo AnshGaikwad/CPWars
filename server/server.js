@@ -6,6 +6,7 @@ const cors = require("cors");
 const app = express();
 const server = http.createServer(app)
 const io = socketio(server)
+const { addUser, removeUser, getUser, getUsersInRoom } = require('./socket/users')
 
 const connectDB = require("./config/db");
 const errorHandler = require("./middleware/error");
@@ -67,6 +68,7 @@ app.use("/api/home", require("./routes/home"));
 // });
 
 io.on('connection', socket => {
+  
   socket.on('join', (payload, callback) => {
     
       let numberOfUsersInRoom = getUsersInRoom(payload.room).length

@@ -1,6 +1,8 @@
 import React, {useState, useEffect, setError} from 'react';
 import Compiler from '../components/compiler/Compiler.js';
 import axios from "axios";
+import { Link } from 'react-router-dom'
+import randomCodeGenerator from '../utils/randomCodeGenerator'
 
 const Overview = () => {
 
@@ -25,19 +27,32 @@ const Overview = () => {
     setUser(data.user);
   }, []);
 
+  
 
   return (
     <div className='main'>
-      <h1>Welcome {user.username}</h1>
+            <h1>Welcome {user.username}</h1>
     </div>
   );
 };
 
 export const Battle = () => {
+
+  const [roomCode, setRoomCode] = useState('')
+
     return (
       <div className='main'>
-        <h1>Battle</h1>
+      <div className='homepage-form'>
+          <div >
+              <input type='text' placeholder='Game Code' onChange={(event) => setRoomCode(event.target.value)} />
+              <Link to={`/overview/battle/play?roomcode=${roomCode}`}><button className="game-button green">JOIN BATTLE</button></Link>
+          </div>
+          <h1>OR</h1>
+          <div className='homepage-create'>
+              <Link to={`/overview/battle/play?roomCode=${randomCodeGenerator(5)}`}><button className="game-button orange">CREATE BATTLE</button></Link>
+          </div>
       </div>
+  </div>
     );
   };
   

@@ -143,14 +143,11 @@ exports.currentUser = async (req, res, next) => {
 
   const user = await User.findById(decoded.id);
 
-  console.log(user);
-
   try{
   res.status(200).json({
     user,
   });
 
-  console.log("done");
 }
 catch(err)
 {

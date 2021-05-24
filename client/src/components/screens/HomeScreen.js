@@ -9,6 +9,7 @@ import Watch from "../../pages/Watch";
 import Profile from "../../pages/Profile";
 import { Coders, Community, Forum, Teams } from "../../pages/Community";
 import Support from "../../pages/Support";
+import Play from "../../pages/Play";
 
 const HomeScreen = () => {
   const [error, setError] = useState("");
@@ -45,6 +46,7 @@ const HomeScreen = () => {
       <Switch>
         <Route path='/overview' exact component={Overview} />
         <Route path='/overview/battle' exact component={Battle} />
+        <Route path='/overview/battle/play' exact component={Play} />
         <Route path='/overview/practice' exact component={Practice} />
         <Route path='/overview/tournaments' exact component={Tournaments} />
         <Route path='/learn' exact component={Learn} />
