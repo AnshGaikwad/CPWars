@@ -27,7 +27,8 @@ const Overview = () => {
     setUser(data.user);
   }, []);
 
-  
+  localStorage.setItem("username", user.username);  
+  localStorage.setItem("rating", user.rating);  
 
   return (
     <div className='main'>
@@ -45,7 +46,7 @@ export const Battle = () => {
       <div className='homepage-form'>
           <div >
               <input type='text' placeholder='Game Code' onChange={(event) => setRoomCode(event.target.value)} />
-              <Link to={`/overview/battle/play?roomcode=${roomCode}`}><button className="game-button green">JOIN BATTLE</button></Link>
+              <Link to={`/overview/battle/play?roomCode=${roomCode}`}><button className="game-button green">JOIN BATTLE</button></Link>
           </div>
           <h1>OR</h1>
           <div className='homepage-create'>

@@ -1,11 +1,11 @@
 const users = []
 
-const addUser = ({id, name, room}) => {
+const addUser = ({id, name, room, rating}) => {
    const numberOfUsersInRoom = users.filter(user => user.room === room).length
    if(numberOfUsersInRoom === 2)
    return { error: 'Room full' }
 
-   const newUser = { id, name, room }
+   const newUser = { id, name, room, rating }
    users.push(newUser)
    return { newUser }
 }
@@ -18,6 +18,7 @@ const removeUser = id => {
 }
 
 const getUser = id => {
+   console.log(users);
    return users.find(user => user.id === id)
 }
 

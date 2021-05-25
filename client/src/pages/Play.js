@@ -1,10 +1,15 @@
-import React, {useState} from 'react';
+import React, {useState, useEffect} from 'react';
 import io from 'socket.io-client'
 import queryString from 'query-string'
+import Compiler from '../components/compiler/Compiler';
+import { Questions } from '../components/compiler/Questions';
+import {Button} from '@material-ui/core'
 
 const Play = (props) => {
 
     const data = queryString.parse(props.location.search)
+
+    
 
     const ENDPOINT = 'http://localhost:5000'
     //initialize socket state
@@ -12,19 +17,23 @@ const Play = (props) => {
     const [roomFull, setRoomFull] = useState(false)
     const [users, setUsers] = useState([])
     const [currentUser, setCurrentUser] = useState('')
-    const [gameOver, setGameOver] = useState(true)
+    const [gameOver, setGameOver] = useState(false)
     const [winner, setWinner] = useState('')
 
-    useEffect(() => {
-        const connectionOptions =  {
-            "forceNew" : true,
-            "reconnectionAttempts": "Infinity", 
-            "timeout" : 10000,                  
-            "transports" : ["websocket"]
-        }
-        socket = io.connect(ENDPOINT, connectionOptions)
+    const name = localStorage.getItem('username')
+    const rating = localStorage.getItem('rating')
 
-        socket.emit('join', {room: room}, (error) => {
+    const connectionOptions =  {
+        "forceNew" : true,
+        "reconnectionAttempts": "Infinity", 
+        "timeout" : 10000,                  
+        "transports" : ["websocket"]
+    }
+    const socket = io.connect(ENDPOINT, connectionOptions)
+
+    useEffect(() => {
+
+        socket.emit('join', {room: room, name: name, rating: rating}, (error) => {
             if(error)
                 setRoomFull(true)
         })
@@ -37,12 +46,64 @@ const Play = (props) => {
         }
     }, [])
 
+    useEffect(() => {
 
-  return (
-    <div className='main'>
-      <h1>Play</h1>
+        socket.on("roomData", ({ users }) => {
+            console.log(socket)
+            setUsers(users)
+
+            if(users.length == 2)
+                setRoomFull(true);
+        })
+
+        socket.on('currentUserData', ({ name }) => {
+            console.log(name)
+            setCurrentUser(name)
+        })
+
+        socket.on('win', ({gameOver, name}) => {
+            console.log("here")
+            setGameOver(gameOver);
+            setWinner(name);
+        })
+
+
+    }, [])
+
+    
+    const submit = () => {
+        setGameOver(true);
+        console.log(room);
+        socket.emit('win', ({ gameOver : true, name , room}))
+        setWinner('You');
+    }
+
+
+  return !roomFull ? (
+    <div className=''>
+      <h1>Waiting for player to join</h1>
+      <br/>
+      <h2>Room Code : {room}</h2>
     </div>
-  );
+  ) : (gameOver ? (
+      <div>
+          <h2>Game Over</h2>
+      <h2>{winner} has won </h2>
+      </div>
+  ) : (
+    <div className=''>
+    <h2>Match Begins</h2>
+    <br/>
+    <h2>{users[0].name} Vs {users[1].name}</h2>
+    <h3>{users[0].rating} Vs {users[1].rating}</h3>
+    <Button variant="contained" onClick={submit}>
+            
+    </Button>
+    <Questions/>
+    <Compiler/>
+
+  </div>
+  ));
 };
 
 export default Play;

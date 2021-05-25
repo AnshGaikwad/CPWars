@@ -75,8 +75,9 @@ io.on('connection', socket => {
 
       const { error, newUser} = addUser({
           id: socket.id,
-          name: numberOfUsersInRoom===0 ? 'Player 1' : 'Player 2',
-          room: payload.room
+          name: payload.name,
+          room: payload.room,
+          rating: payload.rating
       })
 
       if(error)
@@ -85,27 +86,21 @@ io.on('connection', socket => {
       socket.join(newUser.room)
 
       io.to(newUser.room).emit('roomData', {room: newUser.room, users: getUsersInRoom(newUser.room)})
+      console.log(getUsersInRoom(newUser.room))
       socket.emit('currentUserData', {name: newUser.name})
       callback()
   })
 
-  socket.on('initGameState', gameState => {
-      const user = getUser(socket.id)
-      if(user)
-          io.to(user.room).emit('initGameState', gameState)
-  })
-
-  socket.on('updateGameState', gameState => {
-      const user = getUser(socket.id)
-      if(user)
-          io.to(user.room).emit('updateGameState', gameState)
-  })
-
-  socket.on('sendMessage', (payload, callback) => {
-      const user = getUser(socket.id)
-      io.to(user.room).emit('message', {user: user.name, text: payload.message})
-      callback()
-  })
+  socket.on('win', ({ gameOver, name, room }) => {
+    console.log(room);
+    console.log(gameOver);
+    if(room)
+    {
+      io.to(room).emit('win', ({ gameOver, name }))
+      console.log("sent");
+    }
+        
+})
 
   socket.on('disconnect', () => {
       const user = removeUser(socket.id)
