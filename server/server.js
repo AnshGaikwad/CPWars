@@ -91,12 +91,13 @@ io.on('connection', socket => {
       callback()
   })
 
-  socket.on('win', ({ gameOver, name, room }) => {
+  socket.on('win', ({ gameOver, username, room }) => {
     console.log(room);
     console.log(gameOver);
+    console.log(username)
     if(room)
     {
-      io.to(room).emit('win', ({ gameOver, name }))
+      io.to(room).emit('win', ({ gameOver, name : username }))
       console.log("sent");
     }
         

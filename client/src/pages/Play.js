@@ -20,7 +20,7 @@ const Play = (props) => {
     const [gameOver, setGameOver] = useState(false)
     const [winner, setWinner] = useState('')
 
-    const name = localStorage.getItem('username')
+    const username = localStorage.getItem('username')
     const rating = localStorage.getItem('rating')
 
     const connectionOptions =  {
@@ -33,7 +33,7 @@ const Play = (props) => {
 
     useEffect(() => {
 
-        socket.emit('join', {room: room, name: name, rating: rating}, (error) => {
+        socket.emit('join', {room: room, name: username, rating: rating}, (error) => {
             if(error)
                 setRoomFull(true)
         })
@@ -64,18 +64,23 @@ const Play = (props) => {
         socket.on('win', ({gameOver, name}) => {
             console.log("here")
             setGameOver(gameOver);
-            setWinner(name);
+            console.log(username);
+            console.log(name);
+            if(name != username)
+                setWinner(name);
         })
 
 
     }, [])
 
     
+
+    
     const submit = () => {
         setGameOver(true);
         console.log(room);
-        socket.emit('win', ({ gameOver : true, name , room}))
-        setWinner('You');
+        socket.emit('win', ({ gameOver : true, username , room}))
+        setWinner('Congratulations You');
     }
 
 
@@ -85,25 +90,29 @@ const Play = (props) => {
       <br/>
       <h2>Room Code : {room}</h2>
     </div>
-  ) : (gameOver ? (
-      <div>
-          <h2>Game Over</h2>
-      <h2>{winner} has won </h2>
-      </div>
   ) : (
     <div className=''>
     <h2>Match Begins</h2>
+    {gameOver ?  (
+      <div>
+          <h2>Good Game</h2>
+      <h2>{winner} has completed </h2>
+      {winner != currentUser ? 
+        <h2>You can still continue</h2>
+        : null}
+      </div>
+  ) : null} 
     <br/>
     <h2>{users[0].name} Vs {users[1].name}</h2>
-    <h3>{users[0].rating} Vs {users[1].rating}</h3>
+    <h3>{users[0].rating}    {users[1].rating}</h3>
     <Button variant="contained" onClick={submit}>
-            
+        Submit Code
     </Button>
     <Questions/>
     <Compiler/>
 
   </div>
-  ));
+  );
 };
 
 export default Play;
